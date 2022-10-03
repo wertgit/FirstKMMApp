@@ -3,9 +3,14 @@ package com.bakabool.firstkmmapp.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,6 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bakabool.firstkmmapp.Greeting
+import com.bakabool.firstkmmapp.shared.cache.DatabaseDriverFactory
+import com.bakabool.firstkmmapp.shared.cache.KmmSDK
 
 @Composable
 fun MyApplicationTheme(
@@ -61,13 +68,17 @@ fun MyApplicationTheme(
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val kmmSDK = KmmSDK(DatabaseDriverFactory(this))
+        val listOfNotes = kmmSDK.getAllNotes().toMutableList()
+        //kmmSDK.insertNote("Hello","KMM is fun")
+
         setContent {
             MyApplicationTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting(Greeting().greeting())
+                    Greeting("${listOfNotes.first().title}\n${listOfNotes.first().body}")
                 }
             }
         }
@@ -76,7 +87,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(text: String) {
-    Text(text = text, fontSize = 36.sp)
+    val shape = CircleShape
+    Text(
+        text = text, fontSize = 24.sp, modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
+    )
 }
 
 @Preview
