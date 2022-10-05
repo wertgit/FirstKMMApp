@@ -14,6 +14,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -22,9 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import com.bakabool.firstkmmapp.Greeting
+import com.bakabool.firstkmmapp.Rockets
 import com.bakabool.firstkmmapp.shared.cache.DatabaseDriverFactory
 import com.bakabool.firstkmmapp.shared.cache.KmmSDK
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyApplicationTheme(
@@ -78,7 +87,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("${listOfNotes.first().title}\n${listOfNotes.first().body}")
+                    val scope = rememberCoroutineScope()
+                    var text by remember { mutableStateOf("Loading") }
+                    LaunchedEffect(true) {
+                        scope.launch {
+                            text = try {
+                                Rockets().rocketGreeting()
+                            } catch (e: Exception) {
+                                e.localizedMessage ?: "error"
+                            }
+                        }
+                    }
+                    Greeting(text)
+                   // Greeting(Greeting().greeting())
+                   // Greeting("${listOfNotes.first().title}\n${listOfNotes.first().body}")
                 }
             }
         }
