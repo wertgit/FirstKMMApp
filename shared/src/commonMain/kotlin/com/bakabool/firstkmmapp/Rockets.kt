@@ -1,6 +1,6 @@
 package com.bakabool.firstkmmapp
 
-import com.bakabool.firstkmmapp.NewYear.daysUntilNewYear
+import com.bakabool.firstkmmapp.NewYear.daysUntilChristmas
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -34,9 +34,13 @@ class Rockets {
         val rockets: List<RocketLaunch> =
             httpClient.get("https://api.spacexdata.com/v4/launches").body()
         val lastSuccessLaunch = rockets.last { it.launchSuccess == true }
-        return "Guess what it is! >"+
-            "\nThere are only ${daysUntilNewYear()} left until New Year! 🎅🏼 " +
-            "\nFor mission: ${lastSuccessLaunch.missionName} 🚀"+
+        return "Guess what! >"+
+            "\n\nThere are only ${daysUntilChristmas()} days left until Christmas! 🎅🏼 " +
+            "\n\nFor mission: ${lastSuccessLaunch.missionName} 🚀"+
             "\nThe last successful launch was ${lastSuccessLaunch.launchDateUTC} 🚀"
+    }
+
+    suspend fun fetchRockets(): List<RocketLaunch> {
+        return httpClient.get("https://api.spacexdata.com/v4/launches").body()
     }
 }

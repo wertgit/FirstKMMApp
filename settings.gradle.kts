@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "FirstKMMApp"
 include(":androidApp")
 include(":shared")
+include(":findtimeshared")

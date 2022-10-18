@@ -1,13 +1,17 @@
 plugins {
-    kotlin("multiplatform")
-    id("com.android.library")
+    // The first plugin is for KMP and defines this module as a multiplatform module
+    kotlin(multiplatform)
+    // You’ll use this below to create an Android library for use in an Android app
+    id(androidLib)
     id("com.squareup.sqldelight")
     kotlin("plugin.serialization") version "1.7.20"
 }
 
 kotlin {
+    // define an Android target
     android()
-    
+
+    // defines a target for the iOS different emulator and chip version you intent to support
     listOf(
         iosX64(),
         iosArm64(),
@@ -25,6 +29,7 @@ kotlin {
         val commonMain by getting{
             // add Multiplatform dependencies. These are multiplatform libraries that support multiple targets
             dependencies {
+                implementation(project(":findtimeshared"))
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
@@ -73,10 +78,10 @@ kotlin {
 
 android {
     namespace = "com.bakabool.firstkmmapp"
-    compileSdk = 32
+    compileSdk = Versions.compile_sdk
     defaultConfig {
-        minSdk = 26
-        targetSdk = 32
+        minSdk = Versions.min_sdk
+        targetSdk = Versions.target_sdk
     }
 }
 
